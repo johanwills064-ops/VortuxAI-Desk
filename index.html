@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VortuxAI Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#F2F4F8;--ink:#10131A;--mute:#586073;--card:#FFFFFF;--line:#D9DEEA;--acc:#3D3BF3;--acc-ink:#FFFFFF;--soft:#E4E6FB;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1219;--ink:#EEF0F6;--mute:#9AA3B8;--card:#171B25;--line:#2A3040;--acc:#8B8AFF;--acc-ink:#0F1219;--soft:#23264A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1219;--ink:#EEF0F6;--mute:#9AA3B8;--card:#171B25;--line:#2A3040;--acc:#8B8AFF;--acc-ink:#0F1219;--soft:#23264A;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.brand{font-weight:700;font-size:1.2rem}
+button,input{font:inherit}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:10px;padding:12px 20px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);padding:8px 14px;font-weight:500}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:28px 0 56px}
+h1{font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1.05;margin:0 0 16px;letter-spacing:-.02em}
+.lead{color:var(--mute);font-size:1.1rem;max-width:46ch;margin:0 0 24px}
+.win{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;max-width:460px}
+.win .bar{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.win .bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.msg{margin:14px;padding:10px 14px;border-radius:12px;max-width:85%;font-size:.95rem}
+.msg.u{background:var(--soft);margin-left:auto}
+.msg.a{background:var(--bg);border:1px solid var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px}
+.card h2{margin:0 0 6px;font-size:1.4rem}
+label{display:block;font-size:.9rem;margin:14px 0 6px;font-weight:500}
+input[type=text],input[type=email],input.url{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:16px 0}
+.chk input{margin-top:5px}
+.err{color:#D2364C;font-size:.9rem;min-height:1.3em;margin:8px 0 0}
+.card .btn{width:100%;margin-top:6px;text-align:center}
+#ok{display:none}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:40px 0;border-top:1px solid var(--line)}
+.feat h3{margin:0 0 6px;font-size:1.1rem}
+.feat p{margin:0;color:var(--mute)}
+footer{padding:24px 0 90px;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line)}
+.editbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));display:none;gap:10px;align-items:center;flex-wrap:wrap;z-index:5}
+.editbar span{font-size:.9rem;color:var(--mute)}
+.editbar input{flex:1;min-width:200px}
+body.editing .editbar{display:flex}
+body.editing [data-e]{outline:2px dashed var(--acc);outline-offset:3px;border-radius:4px;cursor:text}
+@media (max-width:760px){.hero,.feat{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand" data-e="brand">VortuxAI Desk</div>
+  <button class="btn ghost" id="toggle" type="button">✏️ Editar página</button>
+</header>
+
+<section class="hero">
+  <div>
+    <h1 data-e="title">Tu asistente de IA, ahora en tu escritorio</h1>
+    <p class="lead" data-e="lead">Regístrate y descarga la nueva versión de la app. Funciona sin abrir el navegador y guarda tus conversaciones en tu equipo.</p>
+    <div class="win" aria-hidden="true">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="msg u" data-e="m1">Resume mi reunión de hoy en tres puntos.</div>
+      <div class="msg a" data-e="m2">Listo. Acordaron la fecha de lanzamiento, el presupuesto y quién lidera las pruebas.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="reg">
+      <h2 data-e="formtitle">Regístrate para descargar</h2>
+      <p class="lead" style="font-size:.95rem;margin:0" data-e="formsub">Solo toma un minuto. Al terminar verás el botón de descarga.</p>
+      <form id="f" novalidate>
+        <label for="n">Nombre</label>
+        <input type="text" id="n" autocomplete="name">
+        <label for="e">Correo electrónico</label>
+        <input type="email" id="e" autocomplete="email">
+        <label class="chk"><input type="checkbox" id="t"><span data-e="terms">Acepto los términos de uso y la política de privacidad.</span></label>
+        <button class="btn" type="submit" data-e="regbtn">Registrarme</button>
+        <p class="err" id="err" role="alert"></p>
+      </form>
+    </div>
+    <div id="ok">
+      <h2 data-e="oktitle">¡Registro listo!</h2>
+      <p class="lead" style="font-size:.95rem" data-e="oksub">Gracias por registrarte. Descarga la app e instálala en tu equipo.</p>
+      <a class="btn" id="dl" href="#" target="_blank" rel="noopener" data-e="dlbtn">Descargar la app</a>
+      <p class="err" id="dlmsg" style="color:var(--mute)"></p>
+    </div>
+  </div>
+</section>
+
+<section class="feat">
+  <div><h3 data-e="f1t">Rápida</h3><p data-e="f1p">Responde en segundos y se abre con un atajo de teclado.</p></div>
+  <div><h3 data-e="f2t">Privada</h3><p data-e="f2p">Tus conversaciones se quedan guardadas en tu computadora.</p></div>
+  <div><h3 data-e="f3t">Siempre a mano</h3><p data-e="f3p">Se queda en la barra de tareas, lista cuando la necesites.</p></div>
+</section>
+
+<footer data-e="foot">© 2026 VortuxAI Desk. Todos los derechos reservados.</footer>
+</div>
+
+<div class="editbar">
+  <span>Modo edición: haz clic en cualquier texto con borde punteado.</span>
+  <input class="url" id="url" type="text" placeholder="Enlace de descarga (https://…)" aria-label="Enlace de descarga">
+  <button class="btn ghost" id="reset" type="button">Restablecer textos</button>
+</div>
+
+<script>
+(function(){
+  var P="novaia:";
+  function get(k){try{return localStorage.getItem(P+k)}catch(e){return null}}
+  function set(k,v){try{localStorage.setItem(P+k,v)}catch(e){}}
+  var els=[].slice.call(document.querySelectorAll("[data-e]"));
+  els.forEach(function(el){
+    var s=get("t:"+el.dataset.e); if(s!==null) el.textContent=s;
+    el.addEventListener("input",function(){set("t:"+el.dataset.e,el.textContent)});
+  });
+  var url=document.getElementById("url"), dl=document.getElementById("dl"), dlmsg=document.getElementById("dlmsg");
+  var link=get("url")||"https://www.VortuxAI.com"; url.value=link;
+  function applyLink(){
+    if(link){dl.href=link;dlmsg.textContent=""}
+    else{dl.href="#";dlmsg.textContent="Aún no hay enlace de descarga configurado."}
+  }
+  applyLink();
+  url.addEventListener("input",function(){link=url.value.trim();set("url",link);applyLink()});
+
+  var on=false, tg=document.getElementById("toggle");
+  tg.addEventListener("click",function(){
+    on=!on; document.body.classList.toggle("editing",on);
+    els.forEach(function(el){if(on)el.setAttribute("contenteditable","true");else el.removeAttribute("contenteditable")});
+    tg.textContent=on?"✅ Terminar edición":"✏️ Editar página";
+  });
+  document.getElementById("reset").addEventListener("click",function(){
+    try{Object.keys(localStorage).forEach(function(k){if(k.indexOf(P+"t:")===0)localStorage.removeItem(k)})}catch(e){}
+    location.reload();
+  });
+
+  var f=document.getElementById("f"), err=document.getElementById("err");
+  function showOk(){document.getElementById("reg").style.display="none";document.getElementById("ok").style.display="block"}
+  if(get("registered")==="1") showOk();
+  f.addEventListener("submit",function(ev){
+    ev.preventDefault();
+    var n=document.getElementById("n").value.trim(), e=document.getElementById("e").value.trim();
+    if(!n){err.textContent="Escribe tu nombre.";return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){err.textContent="Escribe un correo válido, por ejemplo nombre@correo.com.";return}
+    if(!document.getElementById("t").checked){err.textContent="Acepta los términos para continuar.";return}
+    set("registered","1"); showOk();
+  });
+})();
+</script>
+</body>
+</html>
